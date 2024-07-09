@@ -2,6 +2,31 @@ import logo from "./logo.svg";
 import "./App.css";
 import ElementoContenidoCentral from "./Components/ElementoContenidoCentral";
 import React, { useState } from "react"; // hooks
+import rutas from './Config/rutas';
+
+import {
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+  NavLink,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  NavbarText,
+} from 'reactstrap';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  NavLink as RouterNavLink,
+} from "react-router-dom";
+
+
 
 function App() {
   //hooks para crear estados, con una función para modificar el valor del estado que se está creando.
@@ -26,6 +51,10 @@ function App() {
   ]);
   const [entrada, setEntrada] = useState({})
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggle = () => setIsOpen(!isOpen);
+
   // función para extraer valor de un input
   const changeHandler = (event) => {
     const value = event.target.value;
@@ -37,39 +66,39 @@ function App() {
     setEntradasBlog([...entradasBlog, entrada])
   }
   //const titulo = "Bienvenidos a mi blog de Kodemia!";
-  return (
-    <div className="App">
-      <h1>{titulo}</h1>
 
-      <div className="contenedor-principal">
-        <div className="contenedor-formulario">
-          <form>
-            <div className="grupo-formulario">
-              <label for="">Titulo</label>
-              <input type="text" name="tituloEntrada" onChange=
-              { changeHandler }/>
-            </div>
-            <div className="grupo-formulario">
-              <label for="">Imagen</label>
-              <input type="text" name="imagen" onChange=
-              { changeHandler }/>
-            </div>
-            <div className="grupo-formulario">
-              <label for="">Contenido</label>
-              <input type="text" name="contenido" onChange=
-              { changeHandler }/>
-            </div>
-            <button type="button" onClick={ guardarInformacion }>agregar</button>
-          </form>
-        </div>
-      <div className="contenedor-entradas">
-        {
-          entradasBlog.map((entrada, index) => <ElementoContenidoCentral informacionEntrada = 
-          { entrada }/>)
-        }
-      </div>
-      </div>
-     
+  
+  return (
+
+    <div className="App">
+      <Router>
+            <Navbar color="dark" dark expand="md">
+            <NavbarBrand href="/">KodeBlog</NavbarBrand>
+            <NavbarToggler onClick={toggle} />
+              <Collapse isOpen={isOpen} navbar>
+                <Nav className="mr-auto" navbar>
+                  {rutas.rutas.map((rutas, index) => {
+                    const { label, path} = rutas
+                    return(
+                      <NavItem key={index}>
+                        <RouterNavLink to={path} className="nav-link">
+                          {label}
+                        </RouterNavLink>
+                        
+                        
+                      </NavItem>
+                    );
+                  })}
+                </Nav>
+              <NavbarText>Simple Text</NavbarText>
+              </Collapse>
+            </Navbar>
+            <Routes>
+            <Route path="/create" element={<h1> Crear Post </h1>}/>
+
+            <Route path="/" element={<h1> Home </h1>}/>
+            </Routes>
+      </Router> 
     </div>
   );
 }
